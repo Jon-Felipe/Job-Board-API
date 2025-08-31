@@ -1,8 +1,9 @@
 import express, { type Request, type Response } from 'express';
 import dotenv from 'dotenv';
-import connectDB from './config/db';
-
 dotenv.config();
+
+import connectDB from './config/db';
+import jobRoutes from './routes/jobRoutes';
 
 const app = express();
 
@@ -11,6 +12,8 @@ app.use(express.json());
 app.get('/', (_: Request, res: Response) => {
   res.send('Hello World: TypeScript');
 });
+
+app.use('/api/jobs', jobRoutes);
 
 const PORT = process.env.PORT || 5000;
 
