@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import Job from '../models/Job';
+import getValidTypes from '../helpers';
 
 interface IGetJobsQuery {
   limit?: string;
   employmentType?: string | string[];
+  experienceLevel?: string | string[];
 }
 
 export async function getJobs(
@@ -11,19 +13,25 @@ export async function getJobs(
   res: Response
 ): Promise<void> {
   const limit = parseInt(req.query.limit as string, 10) || 6;
-  const { employmentType } = req.query;
+  const { employmentType, experienceLevel } = req.query;
 
   let filter: Record<string, any> = {};
 
   const allowedTypes = ['Full-time', 'Part-time', 'Internship', 'Freelance'];
-  const types = Array.isArray(employmentType)
-    ? employmentType
-    : employmentType?.split(',');
+  const allowedExperienceTypes = ['Entry', 'Mid', 'Senior'];
 
-  const validTypes = types?.filter((type) => allowedTypes.includes(type));
+  const validEmploymentTypes = getValidTypes(employmentType, allowedTypes);
+  const validExperienceTypes = getValidTypes(
+    experienceLevel,
+    allowedExperienceTypes
+  );
 
-  if (validTypes && validTypes.length > 0) {
-    filter.employmentType = { $in: validTypes };
+  if (validEmploymentTypes && validEmploymentTypes.length > 0) {
+    filter.employmentType = { $in: validEmploymentTypes };
+  }
+
+  if (validExperienceTypes && validExperienceTypes.length > 0) {
+    filter.experienceLevel = { $in: validExperienceTypes };
   }
 
   try {
