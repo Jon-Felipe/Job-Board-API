@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import Job from '../models/Job';
-import getValidTypes from '../helpers';
+import getValidTypes from '../utils/helpers';
 
 interface IGetJobsQuery {
   limit?: string;
