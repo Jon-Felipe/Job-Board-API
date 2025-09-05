@@ -51,7 +51,7 @@ export async function getJob(req: Request, res: Response, next: NextFunction) {
       throw new NotFoundRequestError(`No job found with ID: ${req.params.id}`);
     }
 
-    res.status(200).json(job);
+    res.status(200).json({ job });
   } catch (error) {
     next(error);
   }
