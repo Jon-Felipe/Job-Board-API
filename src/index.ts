@@ -5,6 +5,7 @@ import cors from 'cors';
 
 import connectDB from './config/db';
 import jobRoutes from './routes/jobRoutes';
+import errorHandlerMiddleware from './middleware/error-handler';
 
 const app = express();
 
@@ -16,6 +17,8 @@ app.get('/', (_: Request, res: Response) => {
 });
 
 app.use('/api/jobs', jobRoutes);
+
+app.use(errorHandlerMiddleware);
 
 const PORT = process.env.PORT || 5000;
 
