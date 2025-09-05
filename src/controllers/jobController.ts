@@ -1,6 +1,7 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import Job from '../models/Job';
 import getValidTypes from '../utils/helpers';
+import NotFoundRequestError from '../errors/not-found-request';
 
 interface IGetJobsQuery {
   limit?: string;
@@ -39,5 +40,19 @@ export async function getJobs(
     res.status(200).json({ jobs });
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
+  }
+}
+
+export async function getJob(req: Request, res: Response, next: NextFunction) {
+  try {
+    const job = await Job.findById(req.params.id);
+
+    if (!job) {
+      throw new NotFoundRequestError(`No job found with ID: ${req.params.id}`);
+    }
+
+    res.status(200).json(job);
+  } catch (error) {
+    next(error);
   }
 }
