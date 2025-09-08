@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 interface IAddress {
   street: string;
@@ -11,6 +12,7 @@ interface IUser extends Document {
   firstName: string;
   lastName: string;
   email: string;
+  password: string;
   phone?: string;
   age?: number;
   address?: IAddress;
@@ -37,11 +39,24 @@ const userSchema: Schema = new Schema(
       trim: true,
       match: [/\S+@\S+\.\S+/, 'Invalid email format'],
     },
+    password: { type: String, minlength: 6 },
     phone: { type: String, trim: true },
     age: { type: Number, min: 0 },
     address: { type: addressSchema, required: false },
   },
   { timestamps: true }
 );
+
+userSchema.pre<IUser>('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(this.password, salt);
+    this.password = hashedPassword;
+    next();
+  } catch (error) {
+    next(error as Error);
+  }
+});
 
 export default mongoose.model<IUser>('User', userSchema);
