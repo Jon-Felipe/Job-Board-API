@@ -5,6 +5,7 @@ import cors from 'cors';
 
 import connectDB from './config/db';
 import jobRoutes from './routes/jobRoutes';
+import authRoutes from './routes/authRoutes';
 import errorHandlerMiddleware from './middleware/error-handler';
 
 const app = express();
@@ -17,6 +18,7 @@ app.get('/', (_: Request, res: Response) => {
 });
 
 app.use('/api/jobs', jobRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use(errorHandlerMiddleware);
 
