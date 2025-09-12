@@ -8,7 +8,7 @@ interface IAddress {
   country: string;
 }
 
-interface IUser extends Document {
+export interface IUser extends Document {
   firstName: string;
   lastName: string;
   email: string;
@@ -18,6 +18,8 @@ interface IUser extends Document {
   address?: IAddress;
   createdAt?: Date;
   updatedAt?: Date;
+
+  comparePassword(userPassword: string): Promise<boolean>;
 }
 
 const addressSchema: Schema = new Schema({
@@ -58,5 +60,11 @@ userSchema.pre<IUser>('save', async function (next) {
     next(error as Error);
   }
 });
+
+userSchema.methods.comparePassword = async function (
+  userPassword: string
+): Promise<boolean> {
+  return bcrypt.compare(userPassword, this.password);
+};
 
 export default mongoose.model<IUser>('User', userSchema);
