@@ -36,3 +36,29 @@ export async function registerUser(
     next(error);
   }
 }
+
+export async function loginUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user || !(await user.comparePassword(password))) {
+      throw new BadRequestError('Invalid credentials');
+    }
+
+    const userObj = user.toObject() as any;
+    delete userObj.password;
+
+    res.status(201).json({
+      msg: 'User logged in successfully',
+      user: userObj,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
