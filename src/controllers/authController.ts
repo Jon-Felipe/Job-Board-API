@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import User from '../models/User';
 import BadRequestError from '../errors/bad-request';
+import { generateToken, setAuthCookie } from '../utils/helpers';
 
 export async function registerUser(
   req: Request,
@@ -22,6 +23,9 @@ export async function registerUser(
       email,
       password,
     }).save();
+
+    const token = generateToken({ id: user._id });
+    setAuthCookie(res, token);
 
     res.status(201).json({
       msg: 'User registered successfully',
@@ -54,7 +58,10 @@ export async function loginUser(
     const userObj = user.toObject() as any;
     delete userObj.password;
 
-    res.status(201).json({
+    const token = generateToken({ id: user._id });
+    setAuthCookie(res, token);
+
+    res.status(200).json({
       msg: 'User logged in successfully',
       user: userObj,
     });
