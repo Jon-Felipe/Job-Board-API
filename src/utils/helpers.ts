@@ -10,7 +10,7 @@ export default function getValidTypes(
 }
 
 interface TokenPayload {
-  id: unknown;
+  userId: unknown;
 }
 
 export function generateToken(payload: TokenPayload): string {
@@ -25,4 +25,8 @@ export function setAuthCookie(res: Response, token: string) {
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 1000,
   });
+}
+
+export function verifyToken(token: string): TokenPayload {
+  return jwt.verify(token, process.env.JWT_SECRET as string) as TokenPayload;
 }

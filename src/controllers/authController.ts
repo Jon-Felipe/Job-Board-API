@@ -24,7 +24,7 @@ export async function registerUser(
       password,
     }).save();
 
-    const token = generateToken({ id: user._id });
+    const token = generateToken({ userId: user._id });
     setAuthCookie(res, token);
 
     res.status(201).json({
@@ -58,7 +58,7 @@ export async function loginUser(
     const userObj = user.toObject() as any;
     delete userObj.password;
 
-    const token = generateToken({ id: user._id });
+    const token = generateToken({ userId: user._id });
     setAuthCookie(res, token);
 
     res.status(200).json({
