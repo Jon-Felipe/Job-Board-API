@@ -6,7 +6,7 @@ export interface AuthRequest extends Request {
   userId?: unknown;
 }
 
-export function authenticateUser(
+function authenticateUserMiddleware(
   req: AuthRequest,
   _: Response,
   next: NextFunction
@@ -22,3 +22,5 @@ export function authenticateUser(
     throw new UnauthenticatedError('authentication invalid');
   }
 }
+
+export default authenticateUserMiddleware;

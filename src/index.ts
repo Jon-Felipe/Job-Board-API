@@ -12,8 +12,8 @@ import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 
 // middleware
-import errorHandlerMiddleware from './middleware/error-handler';
-import { authenticateUser } from './middleware/authMiddleware';
+import errorHandlerMiddleware from './middleware/errorHandlerMiddleware';
+import authenticateUserMiddleware from './middleware/authMiddleware';
 
 const app = express();
 
@@ -26,7 +26,7 @@ app.get('/', (_: Request, res: Response) => {
 });
 
 app.use('/api/auth', authRoutes);
-app.use('/api/user', authenticateUser, userRoutes);
+app.use('/api/user', authenticateUserMiddleware, userRoutes);
 app.use('/api/jobs', jobRoutes);
 
 app.use(errorHandlerMiddleware);
