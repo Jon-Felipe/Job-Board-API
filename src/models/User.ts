@@ -22,12 +22,15 @@ export interface IUser extends Document {
   comparePassword(userPassword: string): Promise<boolean>;
 }
 
-const addressSchema: Schema = new Schema({
-  street: { type: String, required: true, trim: true },
-  city: { type: String, required: true, trim: true },
-  postalCode: { type: String, required: true, trim: true },
-  country: { type: String, required: true, trim: true },
-});
+const addressSchema: Schema = new Schema(
+  {
+    street: { type: String, required: true, trim: true },
+    city: { type: String, required: true, trim: true },
+    postalCode: { type: String, required: true, trim: true },
+    country: { type: String, required: true, trim: true },
+  },
+  { _id: false }
+);
 
 const userSchema: Schema = new Schema(
   {
